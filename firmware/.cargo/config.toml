@@ -1,0 +1,18 @@
+[target.thumbv7em-none-eabihf]
+runner = "probe-rs run --chip STM32G474RE"
+rustflags = [
+    "-C", "link-arg=-Tmemory.x",
+    "-C", "link-arg=--nmagic",
+    "-C", "link-arg=-zmax-page-size=4096",
+]
+
+[build]
+target = "thumbv7em-none-eabihf"
+
+[alias]
+build-release = "build --release --features defmt-rtt"
+flash = "run --release --features defmt-rtt"
+sim = "test --features simulator -- --nocapture"
+clippy-all = "clippy --all-targets --all-features -- -D warnings"
+fmt-check = "fmt --all -- --check"
+size = "size --release --features defmt-rtt -A"

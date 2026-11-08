@@ -1,0 +1,24 @@
+[package]
+name = "batterysense-simulator"
+version = { workspace = true }
+edition = { workspace = true }
+description = "BatterySense host simulator — run firmware logic on PC without STM32 hardware"
+publish = false
+
+[dependencies]
+# Firmware library (no_std, compatible with host)
+batterysense-firmware = { path = "../firmware" }
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+clap = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+rand = "0.8"
+
+[[bin]]
+name = "batterysense-sim"
+path = "src/main.rs"
+
+[dev-dependencies]
+criterion = "0.5"

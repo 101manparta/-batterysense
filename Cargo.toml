@@ -1,0 +1,131 @@
+[workspace]
+resolver = "2"
+members = [
+    "firmware",
+    "gateway",
+    "gui",
+    "simulator",
+]
+exclude = ["firmware-c"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0 OR MIT"
+authors = ["BatterySense Contributors <https://github.com/yourname/batterysense>"]
+repository = "https://github.com/yourname/batterysense"
+description = "Industrial-grade battery voltage acquisition system — open, safe, auditable"
+categories = ["embedded", "hardware-support", "industrial", "monitoring"]
+keywords = ["battery", "bms", "voltage", "can", "stm32", "ads1262", "tauri"]
+
+[workspace.dependencies]
+# Core embedded
+embassy-executor = { version = "0.7", features = ["arch-cortex-m", "nightly"] }
+embassy-stm32 = { version = "0.6", features = ["stm32g4", "g474re", "rt", "defmt", "time-driver-tim2", "mode-async", "spi", "can-fd", "usb", "i2c", "adc", "rng", "exti", "gpio", "dma", "flash", "pwr", "rcc", "syscfg", "timer", "usart", "wwdg", "iwdg"] }
+embassy-time = { version = "0.5", features = ["defmt"] }
+embassy-sync = { version = "0.5", features = ["defmt"] }
+embassy-usb = { version = "0.5", features = ["defmt", "cdc-acm"] }
+embassy-can = "0.1"
+
+# CAN & Protocols
+canopen-rs = { version = "0.3", features = ["async", "defmt"] }
+j1939 = { version = "0.2", features = ["defmt"] }
+postcard = { version = "1.0", features = ["defmt", "alloc"] }
+cobs = "0.2"
+
+# Safety & Crypto
+mbedtls = { version = "0.3", features = ["std", "rng", "aes", "sha2", "ecdsa", "x509", "pem"] }
+tfm = { version = "0.1", features = ["psa-crypto", "secure-boot"] }
+crc = { version = "3.0", features = ["crc32c"] }
+
+# Async & Comms
+tokio = { version = "1.38", features = ["full", "tracing", "rustls"] }
+rumqttc = { version = "0.21", features = ["rustls", "tokio"] }
+influxdb3 = { version = "0.4", features = ["tokio", "arrow"] }
+socketcan = { version = "0.5", features = ["tokio", "async"] }
+serialport = { version = "5.0", features = ["tokio"] }
+
+# CLI & Config
+clap = { version = "4.5", features = ["derive", "env", "help"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.8"
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Logging & Observability
+defmt = { version = "0.3", features = ["proc-macro"] }
+defmt-rtt = "0.3"
+tracing = { version = "0.1", features = ["std"] }
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt", "json"] }
+opentelemetry = { version = "0.25", features = ["metrics", "trace", "logs"] }
+opentelemetry-otlp = { version = "0.25", features = ["tonic", "grpc", "metrics", "trace", "logs"] }
+opentelemetry-prometheus = "0.25"
+
+# GUI (Tauri + Leptos)
+tauri = { version = "2.0", features = ["acl", "clipboard", "dialog", "fs", "http", "notification", "os-check", "position", "process", "shell", "single-instance", "updater", "window-state"] }
+leptos = { version = "0.7", features = ["csr", "hydrate", "nightly", "serde"] }
+leptos_router = { version = "0.7", features = ["csr", "nightly"] }
+leptos_use = { version = "0.7", features = ["use_clipboard", "use_interval", "use_media_query"] }
+plotters = { version = "0.3", features = ["canvas_backend", "wasm_backend"] }
+web-sys = { version = "0.3", features = ["CanvasRenderingContext2d", "HtmlCanvasElement", "Window", "Document", "Element", "Node", "EventTarget", "MouseEvent", "KeyboardEvent"] }
+gloo = { version = "0.11", features = ["events", "timers", "console", "net", "storage"] }
+
+# Testing
+embedded-test = { version = "0.1", features = ["defmt"] }
+probe-rs = { version = "0.22", features = ["cli", "rtt", "ftdi", "stlink", "jlink", "cmsis-dap"] }
+renode = "0.1"
+
+[workspace.lints.rust]
+all = "warn"
+unused_crate_dependencies = "allow"
+unused_import_braces = "allow"
+unused_lifetimes = "allow"
+unused_qualifications = "allow"
+variant_size_differences = "allow"
+
+[workspace.lints.clippy]
+all = "warn"
+pedantic = "warn"
+nursery = "warn"
+cargo = "warn"
+complexity = "warn"
+perf = "warn"
+style = "warn"
+correctness = "warn"
+suspicious = "warn"
+doc = "warn"
+module_name_repetitions = "allow"
+type_complexity = "allow"
+too_many_arguments = "allow"
+large_enum_variant = "allow"
+enum_variant_names = "allow"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+must_use_candidate = "allow"
+similar_names = "allow"
+wildcard_enum_match_arm = "allow"
+cast_possible_truncation = "allow"
+cast_possible_wrap = "allow"
+cast_precision_loss = "allow"
+cast_sign_loss = "allow"
+unused_self = "allow"
+needless_pass_by_value = "allow"
+
+[profile.release]
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = "symbols"
+opt-level = "z"
+debug = false
+
+[profile.dev]
+debug = 2
+opt-level = 1
+overflow-checks = true
+
+[target.'cfg(all(target_arch = "arm", target_os = "none"))'.dependencies]
+panic-probe = { version = "0.3", optional = true }
+cortex-m = { version = "0.7", optional = true }
+cortex-m-rt = { version = "0.7", optional = true }

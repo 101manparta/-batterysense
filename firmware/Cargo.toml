@@ -1,0 +1,71 @@
+[package]
+name = "batterysense-firmware"
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+authors = { workspace = true }
+repository = { workspace = true }
+description = "BatterySense firmware for STM32G4 — embassy async, CAN FD, ADS1262, dual-bank OTA"
+categories = { workspace = true }
+keywords = { workspace = true }
+publish = false
+
+[dependencies]
+# Workspace deps
+embassy-executor = { workspace = true }
+embassy-stm32 = { workspace = true }
+embassy-time = { workspace = true }
+embassy-sync = { workspace = true }
+embassy-usb = { workspace = true }
+embassy-can = { workspace = true }
+canopen-rs = { workspace = true }
+j1939 = { workspace = true }
+postcard = { workspace = true }
+cobs = { workspace = true }
+mbedtls = { workspace = true }
+tfm = { workspace = true }
+crc = { workspace = true }
+defmt = { workspace = true }
+defmt-rtt = { workspace = true }
+panic-probe = { workspace = true }
+cortex-m = { workspace = true }
+cortex-m-rt = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+postcard = { workspace = true }
+
+# Firmware specific
+embedded-hal = "1.0"
+embedded-hal-async = "1.0"
+embedded-io = "0.6"
+embedded-io-async = "0.6"
+static-cell = "2.1"
+heapless = { version = "0.8", features = ["std"] }
+bitvec = { version = "1.0", features = ["alloc"] }
+micromath = "2.0"
+num-traits = "0.2"
+
+[dependencies.probe-rs]
+version = { workspace = true }
+optional = true
+
+[features]
+default = ["defmt-rtt", "rt"]
+rt = []
+defmt-rtt = []
+probe-rs = ["probe-rs"]
+simulator = []  # for CI testing without hardware
+
+[profile.dev.package."*"]
+opt-level = 1
+debug = 2
+
+[profile.release]
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = "symbols"
+opt-level = "z"
+debug = false

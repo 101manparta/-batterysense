@@ -1,0 +1,20 @@
+[package]
+name = "batterysense-gateway"
+version = { workspace = true }
+edition = { workspace = true }
+description = "BatterySense gateway — MQTT/HTTP bridge for BMS data to cloud platforms"
+publish = false
+
+[dependencies]
+tokio = { workspace = true }
+rumqttc = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+clap = { workspace = true }
+socketcan = { workspace = true }
+
+[[bin]]
+name = "batterysense-gateway"
+path = "src/main.rs"
